@@ -13,21 +13,36 @@ from calculate_kpis import (
     sales_by_category
 )
 
-#  Set Streamlit Page Configuration
+# Set Streamlit Page Configuration
 st.set_page_config(page_title="Supply Chain Dashboard", layout="wide")
 
-#  Title
-st.title(" Supply Chain KPI & Aggregation Dashboard")
+# Title
+st.title(" Supply Chain Data Integration Dashboard")
 
-#  Sidebar Navigation
+#Sidebar Navigation
 st.sidebar.header(" Select Analysis Type")
-options = ["KPI Analysis", "Data Mart Analysis", "Aggregations"]
+options = ["Project Summary", "Schema Diagram", "KPI Analysis", "Data Mart Analysis", "Aggregations"]
 selected_option = st.sidebar.radio("Choose an option", options)
 
-# -----------------------------------------------
-#  KPI Analysis Section with Matplotlib & Seaborn Graphs
-# -----------------------------------------------
-if selected_option == "KPI Analysis":
+#Project Summary
+if selected_option == "Project Summary":
+    st.markdown("""
+    ### **Project Overview**
+    This project focuses on integrating, analyzing, and visualizing **Supply Chain Data** using **Python, MySQL, and Streamlit**.
+    - **ETL Process:** Extract, Clean, and Load data into a structured **Star Schema**.
+    - **Database Design:** Divided data into **Fact Table (`fact_sales`)** and multiple **Dimension Tables**.
+    - **KPI Analysis:** Sales trends, Top Products, Sales by Region, etc.
+    - **Data Marts:** Inventory, Order Fulfillment, Shipping Analysis.
+    - **Visualization:** Interactive Streamlit dashboard with tables and charts.
+    """)
+
+# Schema Diagram
+elif selected_option == "Schema Diagram":
+    st.subheader(" Supply Chain Database Schema")
+    st.image("Schema.png", use_container_width=True)
+
+#  KPI Analysis Section
+elif selected_option == "KPI Analysis":
     st.sidebar.subheader(" Select a KPI")
     
     kpi_options = {
@@ -66,9 +81,8 @@ if selected_option == "KPI Analysis":
 
     st.pyplot(fig)  # Display plot in Streamlit
 
-# -----------------------------------------------
-#  Data Mart Analysis Section
-# -----------------------------------------------
+
+#  Data Mart Analysis Section**
 elif selected_option == "Data Mart Analysis":
     st.sidebar.subheader(" Select a Data Mart")
 
@@ -85,11 +99,10 @@ elif selected_option == "Data Mart Analysis":
     df = data_mart_options[selected_mart]()  # Run selected Data Mart function
     st.dataframe(df)  # Show DataFrame in table format
 
-# -----------------------------------------------
-#  Aggregations Section
-# -----------------------------------------------
+  #Aggregations Section
+
 elif selected_option == "Aggregations":
-    st.sidebar.subheader("📊 Select Aggregation")
+    st.sidebar.subheader(" Select Aggregation")
 
     agg_options = {
         " Total & Average Sales": total_avg_sales,
@@ -111,9 +124,8 @@ elif selected_option == "Aggregations":
         ax.set_xlabel("Total Sales")
         ax.set_ylabel("Category")
         st.pyplot(fig)
-    
+
     #  Display Text Summary for Total & Average Sales (No Graph)
     elif selected_agg == " Total & Average Sales":
         st.write(f" **Total Sales:** {df['total_sales'][0]:,.2f}")
         st.write(f" **Average Order Value:** {df['avg_order_value'][0]:,.2f}")
-
